@@ -1,6 +1,18 @@
 (function () {
   'use strict';
 
+  /* ===== SHARED SCROLL LOCK (mobile menu + lightbox can each hold a lock;
+     body only unlocks once every overlay that requested a lock has released it) ===== */
+  var openOverlays = 0;
+  function lockScroll() {
+    openOverlays++;
+    document.body.style.overflow = 'hidden';
+  }
+  function unlockScroll() {
+    openOverlays = Math.max(0, openOverlays - 1);
+    if (openOverlays === 0) document.body.style.overflow = '';
+  }
+
   /* ===== MOBILE NAV TOGGLE ===== */
   var hamburger = document.querySelector('.hamburger');
   var mobileMenu = document.getElementById('mobile-menu');
@@ -8,7 +20,7 @@
   function closeMenu() {
     hamburger.setAttribute('aria-expanded', 'false');
     mobileMenu.classList.remove('open');
-    document.body.style.overflow = '';
+    unlockScroll();
   }
 
   if (hamburger && mobileMenu) {
@@ -16,7 +28,7 @@
       var isOpen = hamburger.getAttribute('aria-expanded') === 'true';
       hamburger.setAttribute('aria-expanded', String(!isOpen));
       mobileMenu.classList.toggle('open', !isOpen);
-      document.body.style.overflow = isOpen ? '' : 'hidden';
+      if (isOpen) { unlockScroll(); } else { lockScroll(); }
     });
 
     mobileMenu.querySelectorAll('a').forEach(function (link) {
@@ -146,6 +158,59 @@
   window.addEventListener('scroll', onCallBarScroll, { passive: true });
   if (callBar) callBar.style.transition = 'transform 0.3s cubic-bezier(0.16,1,0.3,1)';
 
+  /* ===== NAV DROPDOWN (aria-expanded kept in sync with the CSS :hover/:focus-within
+     that actually shows the menu, so screen readers never announce a state the
+     menu isn't actually in) ===== */
+  document.querySelectorAll('.nav-dropdown').forEach(function (dropdown) {
+    var trigger = dropdown.querySelector('.nav-dropdown-trigger');
+    if (!trigger) return;
+    var setExpanded = function (val) { trigger.setAttribute('aria-expanded', String(val)); };
+    dropdown.addEventListener('mouseenter', function () { setExpanded(true); });
+    dropdown.addEventListener('mouseleave', function () { setExpanded(false); });
+    dropdown.addEventListener('focusin', function () { setExpanded(true); });
+    dropdown.addEventListener('focusout', function (e) {
+      if (!dropdown.contains(e.relatedTarget)) setExpanded(false);
+    });
+  });
+
+  /* ===== LIGHTBOX (used on service pages + gallery.html; no-op if .lightbox absent) ===== */
+  var lightbox = document.querySelector('.lightbox');
+  if (lightbox) {
+    var lightboxImg = lightbox.querySelector('img');
+    var lightboxClose = lightbox.querySelector('.lightbox__close');
+    var lastOpener = null;
+
+    document.querySelectorAll('.gallery-item').forEach(function (item) {
+      item.setAttribute('tabindex', '0');
+      item.setAttribute('role', 'button');
+      var activate = function () {
+        var img = item.querySelector('img');
+        if (!img) return;
+        lastOpener = item;
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt || '';
+        lightbox.classList.add('is-open');
+        lockScroll();
+        lightboxClose.focus();
+      };
+      item.addEventListener('click', activate);
+      item.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activate(); }
+      });
+    });
+
+    var closeLightbox = function () {
+      lightbox.classList.remove('is-open');
+      unlockScroll();
+      if (lastOpener) lastOpener.focus();
+    };
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', function (e) { if (e.target === lightbox) closeLightbox(); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && lightbox.classList.contains('is-open')) closeLightbox();
+    });
+  }
+
   /* ===== QUOTE FORM VALIDATION ===== */
   /* Real-time inline validation: validates on blur, clears on input so
      errors disappear as the visitor corrects them. */
@@ -155,9 +220,12 @@
     var isValidPhone = function (v) { return /[\d\s\(\)\-\+]{7,}/.test(v.trim()); };
     var isEmpty = function (v) { return v.trim().length === 0; };
 
-    var setError = function (input, msg) {
+    var getErrorEl = function (input) {
       var wrapper = input.closest('.form-group') || input.parentElement;
-      var errEl = wrapper.querySelector('.form-error');
+      return wrapper.querySelector('.form-error');
+    };
+    var setError = function (input, msg) {
+      var errEl = getErrorEl(input);
       input.setAttribute('aria-invalid', 'true');
       input.classList.add('is-error');
       input.classList.remove('is-valid');
@@ -167,8 +235,7 @@
       }
     };
     var clearError = function (input) {
-      var wrapper = input.closest('.form-group') || input.parentElement;
-      var errEl = wrapper.querySelector('.form-error');
+      var errEl = getErrorEl(input);
       input.removeAttribute('aria-invalid');
       input.classList.remove('is-error');
       input.classList.add('is-valid');
