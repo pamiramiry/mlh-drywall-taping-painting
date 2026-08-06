@@ -276,17 +276,51 @@
     });
 
     form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
       var allValid = true;
       required.forEach(function (field) {
         if (!validateField(field)) allValid = false;
       });
       if (!allValid) {
-        e.preventDefault();
         var firstError = form.querySelector('.is-error');
         if (firstError) {
           firstError.focus();
           firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
+        return;
+      }
+
+      /* No backend: build a pre-filled email to the business and open the
+         visitor's mail app. The visitor still has to press Send. */
+      var to = form.getAttribute('data-mailto');
+      var getVal = function (id) {
+        var el = form.querySelector('#' + id);
+        return el ? el.value.trim() : '';
+      };
+      var serviceEl = form.querySelector('#service');
+      var serviceLabel = serviceEl && serviceEl.selectedIndex > 0
+        ? serviceEl.options[serviceEl.selectedIndex].text
+        : 'Not specified';
+
+      var subject = 'New Quote Request | MLH Drywall Taping Painting';
+      var body =
+        'Name: ' + getVal('name') + '\n' +
+        'Phone: ' + getVal('phone') + '\n' +
+        'Email: ' + getVal('email') + '\n' +
+        'Service Needed: ' + serviceLabel + '\n\n' +
+        'Project Details:\n' + getVal('details') + '\n';
+
+      var mailto = 'mailto:' + to +
+        '?subject=' + encodeURIComponent(subject) +
+        '&body=' + encodeURIComponent(body);
+
+      window.location.href = mailto;
+
+      var success = form.querySelector('.form-success');
+      if (success) {
+        success.hidden = false;
+        success.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
     });
   }

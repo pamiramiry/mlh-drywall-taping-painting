@@ -645,6 +645,22 @@ p { font-size: 1rem; color: var(--ink-muted); }
 .form-textarea.is-valid {
   border-color: var(--success);
 }
+.form-success {
+  margin: 0 0 1.25rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--success);
+  border-left-width: 4px;
+  border-radius: 8px;
+  background: rgba(39, 174, 96, 0.08);
+  color: var(--text, inherit);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+.form-success a {
+  color: inherit;
+  font-weight: 700;
+  white-space: nowrap;
+}
 
 .quote-form .btn { margin-top: var(--space-1); }
 
