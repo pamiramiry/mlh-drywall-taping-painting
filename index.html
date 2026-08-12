@@ -28,8 +28,11 @@
   <meta name="twitter:image" content="https://www.mlhrenovations.ca/assets/img/og-cover.webp">
 
   <link rel="icon" type="image/svg+xml" href="assets/img/favicon.svg">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 
-  <link rel="stylesheet" href="assets/css/styles.css?v=3">
+  <link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/styles.css?v=4">
 
   <!-- Local Business Schema -->
   <script type="application/ld+json">
@@ -41,6 +44,7 @@
     "url": "https://www.mlhrenovations.ca",
     "telephone": "+16475318731",
     "image": "https://www.mlhrenovations.ca/assets/img/og-cover.webp",
+    "logo": "https://www.mlhrenovations.ca/assets/img/apple-touch-icon.png",
     "description": "MLH Drywall Taping Painting Inc provides framing, drywall installation, taping and mudding, drywall repair, popcorn ceiling removal, interior and exterior painting, tiling, flooring, and basement finishing for homes and businesses across Scarborough, Toronto and the GTA.",
     "address": {
       "@type": "PostalAddress",
@@ -236,19 +240,19 @@
               Services
               <svg class="nav-dropdown-caret" width="10" height="7" viewBox="0 0 12 8" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
-            <div class="nav-dropdown-menu" role="menu">
-              <a href="framing.html" role="menuitem">Framing</a>
-              <a href="drywall-installation.html" role="menuitem">Drywall Installation</a>
-              <a href="taping-mudding.html" role="menuitem">Taping &amp; Mudding</a>
-              <a href="drywall-repair.html" role="menuitem">Drywall Repair &amp; Patching</a>
-              <a href="popcorn-ceiling-removal.html" role="menuitem">Popcorn Ceiling Removal</a>
-              <a href="painting.html" role="menuitem">Interior &amp; Exterior Painting</a>
-              <a href="tiling.html" role="menuitem">Tiling</a>
-              <a href="flooring.html" role="menuitem">Flooring</a>
-              <a href="basement-finishing.html" role="menuitem">Basement Drywall Finishing</a>
+            <div class="nav-dropdown-menu">
+              <a href="/framing">Framing</a>
+              <a href="/drywall-installation">Drywall Installation</a>
+              <a href="/taping-mudding">Taping &amp; Mudding</a>
+              <a href="/drywall-repair">Drywall Repair &amp; Patching</a>
+              <a href="/popcorn-ceiling-removal">Popcorn Ceiling Removal</a>
+              <a href="/painting">Interior &amp; Exterior Painting</a>
+              <a href="/tiling">Tiling</a>
+              <a href="/flooring">Flooring</a>
+              <a href="/basement-finishing">Basement Drywall Finishing</a>
             </div>
           </li>
-          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="/gallery">Gallery</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#reviews">Reviews</a></li>
           <li><a href="#faq">FAQ</a></li>
@@ -277,16 +281,16 @@
   <div class="mobile-menu" id="mobile-menu">
     <ul>
       <li class="mobile-menu-label">Services</li>
-      <li><a href="framing.html">Framing</a></li>
-      <li><a href="drywall-installation.html">Drywall Installation</a></li>
-      <li><a href="taping-mudding.html">Taping &amp; Mudding</a></li>
-      <li><a href="drywall-repair.html">Drywall Repair &amp; Patching</a></li>
-      <li><a href="popcorn-ceiling-removal.html">Popcorn Ceiling Removal</a></li>
-      <li><a href="painting.html">Interior &amp; Exterior Painting</a></li>
-      <li><a href="tiling.html">Tiling</a></li>
-      <li><a href="flooring.html">Flooring</a></li>
-      <li><a href="basement-finishing.html">Basement Drywall Finishing</a></li>
-      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="/framing">Framing</a></li>
+      <li><a href="/drywall-installation">Drywall Installation</a></li>
+      <li><a href="/taping-mudding">Taping &amp; Mudding</a></li>
+      <li><a href="/drywall-repair">Drywall Repair &amp; Patching</a></li>
+      <li><a href="/popcorn-ceiling-removal">Popcorn Ceiling Removal</a></li>
+      <li><a href="/painting">Interior &amp; Exterior Painting</a></li>
+      <li><a href="/tiling">Tiling</a></li>
+      <li><a href="/flooring">Flooring</a></li>
+      <li><a href="/basement-finishing">Basement Drywall Finishing</a></li>
+      <li><a href="/gallery">Gallery</a></li>
       <li><a href="#about">About</a></li>
       <li><a href="#process">Process</a></li>
       <li><a href="#reviews">Reviews</a></li>
@@ -320,7 +324,19 @@
         </div>
 
         <div class="hero-media reveal">
-          <img src="assets/img/image8.webp" alt="Vaulted ceiling with visible taped drywall seams mid-finish, Scarborough home" width="1282" height="947" loading="eager" fetchpriority="high">
+          <img src="assets/img/image8.webp" srcset="assets/img/image8-800.webp 800w, assets/img/image8-1200.webp 1200w, assets/img/image8.webp 1282w" sizes="(max-width: 960px) 100vw, 560px" alt="Vaulted ceiling with visible taped drywall seams mid-finish, Scarborough home" width="1282" height="947" loading="eager" fetchpriority="high">
+
+          <div class="hero-proof">
+            <span class="hero-proof__stars" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 6.9L12 17l-6.3 3.8 1.7-6.9L2 9.2l7.1-.6L12 2z"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 6.9L12 17l-6.3 3.8 1.7-6.9L2 9.2l7.1-.6L12 2z"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 6.9L12 17l-6.3 3.8 1.7-6.9L2 9.2l7.1-.6L12 2z"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 6.9L12 17l-6.3 3.8 1.7-6.9L2 9.2l7.1-.6L12 2z"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 6.9L12 17l-6.3 3.8 1.7-6.9L2 9.2l7.1-.6L12 2z"/></svg>
+            </span>
+            <strong>5.0 out of 5</strong>
+            <span class="hero-proof__meta">from 9 Google reviews</span>
+          </div>
         </div>
       </div>
     </section>
@@ -363,7 +379,7 @@
             </span>
             <h3>Framing</h3>
             <p>Steel stud and wood framing for interior walls, bulkheads, and door and window openings, built square and true across Scarborough, Toronto and the GTA. Every frame we build is prepped specifically for the drywall installation that follows, so there's no gap between trades.</p>
-            <a href="framing.html" class="service-card-link">Learn More &rarr;</a>
+            <a href="/framing" class="service-card-link">Learn More &rarr;</a>
           </article>
 
           <article class="service-card reveal">
@@ -372,7 +388,7 @@
             </span>
             <h3>Drywall Installation</h3>
             <p>New construction and renovation drywall installation across Scarborough, Toronto and the GTA, hung plumb and square to the stud with the right board thickness and fire rating for every room. We handle everything from full-home drywall installation to single-room additions, prepping every joint for a flawless taping finish.</p>
-            <a href="drywall-installation.html" class="service-card-link">Learn More &rarr;</a>
+            <a href="/drywall-installation" class="service-card-link">Learn More &rarr;</a>
           </article>
 
           <article class="service-card reveal">
@@ -381,7 +397,7 @@
             </span>
             <h3>Drywall Taping &amp; Mudding</h3>
             <p>Our drywall taping and mudding crews apply multiple coats and a smooth final sand so seams and corners disappear completely under paint or light. This is the step that makes or breaks a finished wall, and it's the core of what MLH Drywall Taping Painting Inc is known for across the GTA.</p>
-            <a href="taping-mudding.html" class="service-card-link">Learn More &rarr;</a>
+            <a href="/taping-mudding" class="service-card-link">Learn More &rarr;</a>
           </article>
 
           <article class="service-card reveal">
@@ -389,8 +405,8 @@
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="5" y="5" width="14" height="14" rx="3" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 2.4"/><path d="M9 12h6M12 9v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
             </span>
             <h3>Drywall Repair &amp; Patching</h3>
-            <p>Water damage, cracks, holes, and nail pops are patched, re-taped, and texture-matched so the repair blends invisibly into the surrounding wall. Our drywall repair Toronto customers rely on us for is fast, dust-controlled, and finished with the same taping standard as new installation.</p>
-            <a href="drywall-repair.html" class="service-card-link">Learn More &rarr;</a>
+            <p>Water damage, cracks, holes, and nail pops are patched, re-taped, and texture-matched so the repair blends invisibly into the surrounding wall. Drywall repair across Toronto and Scarborough is fast and dust-controlled, and it's finished to the same taping standard as new installation.</p>
+            <a href="/drywall-repair" class="service-card-link">Learn More &rarr;</a>
           </article>
 
           <article class="service-card reveal">
@@ -398,8 +414,8 @@
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 8c1-2 2-2 3 0s2 2 3 0 2-2 3 0 2 2 3 0 2-2 3 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 12v6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M9 15.5l3 3 3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </span>
             <h3>Popcorn Ceiling Removal</h3>
-            <p>Popcorn ceiling removal Toronto homeowners have been putting off for years is a same-week job for our crew: we scrape, skim-coat, and re-texture or smooth-finish the ceiling, then repaint for a modern, updated look. Dust containment and floor protection are standard on every job.</p>
-            <a href="popcorn-ceiling-removal.html" class="service-card-link">Learn More &rarr;</a>
+            <p>The popcorn ceiling you've been putting off for years is a same-week job for our crew: we scrape, skim-coat, and re-texture or smooth-finish the ceiling, then repaint for a modern, updated look. Dust containment and floor protection are standard on every job.</p>
+            <a href="/popcorn-ceiling-removal" class="service-card-link">Learn More &rarr;</a>
           </article>
 
           <article class="service-card reveal">
@@ -407,8 +423,8 @@
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="14" height="6.5" rx="1.4" stroke="currentColor" stroke-width="1.6"/><path d="M8 10.5v3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="8" cy="17" r="3" stroke="currentColor" stroke-width="1.6"/></svg>
             </span>
             <h3>Interior &amp; Exterior Painting</h3>
-            <p>From single-room interior painting Scarborough homeowners request most to full exterior repaints, we prep, prime, and apply premium coatings for a durable, even finish. Every painting contractor Scarborough job includes surface prep, drop-cloth protection, and clean edges around trim and fixtures.</p>
-            <a href="painting.html" class="service-card-link">Learn More &rarr;</a>
+            <p>From a single repainted bedroom to a full exterior repaint, we prep, prime, and apply premium coatings for a durable, even finish. Every painting job includes surface prep, drop-cloth protection, and clean edges around trim and fixtures.</p>
+            <a href="/painting" class="service-card-link">Learn More &rarr;</a>
           </article>
 
           <article class="service-card reveal">
@@ -417,7 +433,7 @@
             </span>
             <h3>Tiling</h3>
             <p>Backsplash, shower, bathroom, and floor tile installation for kitchens, bathrooms, and commercial spaces across Scarborough and the GTA, with precise layout, a level substrate, and clean grout lines. Since we already handle the drywall and paint, tiling is a natural extension with one crew from start to finish.</p>
-            <a href="tiling.html" class="service-card-link">Learn More &rarr;</a>
+            <a href="/tiling" class="service-card-link">Learn More &rarr;</a>
           </article>
 
           <article class="service-card reveal">
@@ -426,7 +442,7 @@
             </span>
             <h3>Flooring</h3>
             <p>Laminate and vinyl plank flooring installed as part of basement finishing and full renovation projects, with proper subfloor prep for a level, lasting result. Flooring pairs naturally with our drywall and tiling work for a fully finished room in one visit.</p>
-            <a href="flooring.html" class="service-card-link">Learn More &rarr;</a>
+            <a href="/flooring" class="service-card-link">Learn More &rarr;</a>
           </article>
 
           <article class="service-card reveal">
@@ -434,8 +450,8 @@
               <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 11 12 4l8 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 11v9h12v-9" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><rect x="9.5" y="15" width="5" height="5" stroke="currentColor" stroke-width="1.6"/></svg>
             </span>
             <h3>Basement Drywall Finishing</h3>
-            <p>Basement drywall finishing Scarborough families count on turns unfinished space into livable square footage, with moisture-appropriate board, proper insulation contact, and full taping and mudding and taping services before paint. We handle framing-adjacent drywall work, bulkheads, and ceiling drywall in the same visit.</p>
-            <a href="basement-finishing.html" class="service-card-link">Learn More &rarr;</a>
+            <p>Basement drywall finishing turns unfinished space into livable square footage, with moisture-appropriate board, proper insulation contact, and full taping and mudding before paint. We handle framing-adjacent drywall work, bulkheads, and ceiling drywall in the same visit.</p>
+            <a href="/basement-finishing" class="service-card-link">Learn More &rarr;</a>
           </article>
         </div>
       </div>
@@ -445,7 +461,7 @@
     <section class="about" id="about">
       <div class="container about-inner">
         <div class="about-media reveal">
-          <img src="assets/img/image18.webp" alt="MLH Drywall Taping Painting Inc crew member on a basement job site in Scarborough" width="1200" height="1600" loading="lazy">
+          <img src="assets/img/image18.webp" srcset="assets/img/image18-800.webp 800w, assets/img/image18.webp 1200w" sizes="(max-width: 960px) 100vw, 560px" alt="MLH Drywall Taping Painting Inc crew member on a basement job site in Scarborough" width="1200" height="1600" loading="lazy">
         </div>
 
         <div class="about-copy reveal">
@@ -791,22 +807,22 @@
       <nav aria-label="Footer services">
         <h3>Services</h3>
         <ul>
-          <li><a href="framing.html">Framing</a></li>
-          <li><a href="drywall-installation.html">Drywall Installation</a></li>
-          <li><a href="taping-mudding.html">Taping &amp; Mudding</a></li>
-          <li><a href="drywall-repair.html">Drywall Repair</a></li>
-          <li><a href="popcorn-ceiling-removal.html">Popcorn Ceiling Removal</a></li>
-          <li><a href="painting.html">Painting</a></li>
-          <li><a href="tiling.html">Tiling</a></li>
-          <li><a href="flooring.html">Flooring</a></li>
-          <li><a href="basement-finishing.html">Basement Finishing</a></li>
+          <li><a href="/framing">Framing</a></li>
+          <li><a href="/drywall-installation">Drywall Installation</a></li>
+          <li><a href="/taping-mudding">Taping &amp; Mudding</a></li>
+          <li><a href="/drywall-repair">Drywall Repair</a></li>
+          <li><a href="/popcorn-ceiling-removal">Popcorn Ceiling Removal</a></li>
+          <li><a href="/painting">Painting</a></li>
+          <li><a href="/tiling">Tiling</a></li>
+          <li><a href="/flooring">Flooring</a></li>
+          <li><a href="/basement-finishing">Basement Finishing</a></li>
         </ul>
       </nav>
 
       <nav aria-label="Footer navigation">
         <h3>Quick Links</h3>
         <ul>
-          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="/gallery">Gallery</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#process">Process</a></li>
           <li><a href="#reviews">Reviews</a></li>
@@ -848,6 +864,6 @@
     </a>
   </div>
 
-  <script src="assets/js/main.js?v=2" defer></script>
+  <script src="assets/js/main.js?v=3" defer></script>
 </body>
 </html>
