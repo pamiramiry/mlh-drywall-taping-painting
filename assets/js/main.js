@@ -13,26 +13,76 @@
     if (openOverlays === 0) document.body.style.overflow = '';
   }
 
+  /* ===== FOCUS TRAP (shared by the mobile menu and the lightbox) =====
+     Keeps Tab inside an open overlay. Returns a function that removes it. */
+  var FOCUSABLE = 'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
+  function trapFocus(container) {
+    function onKeydown(e) {
+      if (e.key !== 'Tab') return;
+      /* getClientRects, not offsetParent: offsetParent is null for
+         position:fixed elements, which silently emptied this list for the
+         lightbox and disabled the trap entirely. */
+      var items = Array.prototype.filter.call(
+        container.querySelectorAll(FOCUSABLE),
+        function (el) { return el.getClientRects().length > 0; }
+      );
+      if (!items.length) return;
+      var first = items[0];
+      var last = items[items.length - 1];
+      /* If focus never landed inside (e.g. .focus() ran before the overlay
+         finished becoming visible), pull it in rather than letting Tab escape. */
+      if (!container.contains(document.activeElement)) {
+        e.preventDefault(); first.focus(); return;
+      }
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault(); last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault(); first.focus();
+      }
+    }
+    document.addEventListener('keydown', onKeydown);
+    return function () { document.removeEventListener('keydown', onKeydown); };
+  }
+
   /* ===== MOBILE NAV TOGGLE ===== */
   var hamburger = document.querySelector('.hamburger');
   var mobileMenu = document.getElementById('mobile-menu');
+  var releaseMenuTrap = null;
 
   function closeMenu() {
+    if (hamburger.getAttribute('aria-expanded') !== 'true') return;
     hamburger.setAttribute('aria-expanded', 'false');
     mobileMenu.classList.remove('open');
+    if (releaseMenuTrap) { releaseMenuTrap(); releaseMenuTrap = null; }
     unlockScroll();
   }
 
   if (hamburger && mobileMenu) {
     hamburger.addEventListener('click', function () {
       var isOpen = hamburger.getAttribute('aria-expanded') === 'true';
-      hamburger.setAttribute('aria-expanded', String(!isOpen));
-      mobileMenu.classList.toggle('open', !isOpen);
-      if (isOpen) { unlockScroll(); } else { lockScroll(); }
+      if (isOpen) {
+        closeMenu();
+        hamburger.focus();
+      } else {
+        hamburger.setAttribute('aria-expanded', 'true');
+        mobileMenu.classList.add('open');
+        lockScroll();
+        releaseMenuTrap = trapFocus(mobileMenu);
+        var firstLink = mobileMenu.querySelector('a[href]');
+        if (firstLink) firstLink.focus();
+      }
     });
 
     mobileMenu.querySelectorAll('a').forEach(function (link) {
       link.addEventListener('click', closeMenu);
+    });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
+        closeMenu();
+        hamburger.focus();
+      }
     });
   }
 
@@ -158,18 +208,44 @@
   window.addEventListener('scroll', onCallBarScroll, { passive: true });
   if (callBar) callBar.style.transition = 'transform 0.3s cubic-bezier(0.16,1,0.3,1)';
 
-  /* ===== NAV DROPDOWN (aria-expanded kept in sync with the CSS :hover/:focus-within
-     that actually shows the menu, so screen readers never announce a state the
-     menu isn't actually in) ===== */
+  /* ===== NAV DROPDOWN =====
+     The menu shows on CSS :hover/:focus-within for pointer and keyboard users.
+     Touch has neither, so the trigger also toggles an .is-open class; without
+     it the first tap on a touch device did nothing at all. aria-expanded is
+     kept in sync with whichever path opened the menu. */
   document.querySelectorAll('.nav-dropdown').forEach(function (dropdown) {
     var trigger = dropdown.querySelector('.nav-dropdown-trigger');
     if (!trigger) return;
-    var setExpanded = function (val) { trigger.setAttribute('aria-expanded', String(val)); };
-    dropdown.addEventListener('mouseenter', function () { setExpanded(true); });
-    dropdown.addEventListener('mouseleave', function () { setExpanded(false); });
+    var setExpanded = function (val) {
+      trigger.setAttribute('aria-expanded', String(val));
+      dropdown.classList.toggle('is-open', val);
+    };
+    /* Only wire the hover path on devices that actually hover. On touch, a tap
+       fires mouseenter first, which set aria-expanded="true" and made the
+       click handler immediately toggle it back off, so the menu never opened. */
+    var canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    trigger.addEventListener('click', function (e) {
+      e.preventDefault();
+      setExpanded(!dropdown.classList.contains('is-open'));
+    });
+    if (canHover) {
+      dropdown.addEventListener('mouseenter', function () { setExpanded(true); });
+      dropdown.addEventListener('mouseleave', function () { setExpanded(false); });
+    }
     dropdown.addEventListener('focusin', function () { setExpanded(true); });
     dropdown.addEventListener('focusout', function (e) {
       if (!dropdown.contains(e.relatedTarget)) setExpanded(false);
+    });
+    dropdown.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && dropdown.classList.contains('is-open')) {
+        setExpanded(false);
+        trigger.focus();
+      }
+    });
+    /* Tapping elsewhere closes an open menu on touch. */
+    document.addEventListener('click', function (e) {
+      if (!dropdown.contains(e.target)) setExpanded(false);
     });
   });
 
@@ -179,6 +255,7 @@
     var lightboxImg = lightbox.querySelector('img');
     var lightboxClose = lightbox.querySelector('.lightbox__close');
     var lastOpener = null;
+    var releaseLightboxTrap = null;
 
     document.querySelectorAll('.gallery-item').forEach(function (item) {
       item.setAttribute('tabindex', '0');
@@ -191,6 +268,7 @@
         lightboxImg.alt = img.alt || '';
         lightbox.classList.add('is-open');
         lockScroll();
+        releaseLightboxTrap = trapFocus(lightbox);
         lightboxClose.focus();
       };
       item.addEventListener('click', activate);
@@ -201,6 +279,7 @@
 
     var closeLightbox = function () {
       lightbox.classList.remove('is-open');
+      if (releaseLightboxTrap) { releaseLightboxTrap(); releaseLightboxTrap = null; }
       unlockScroll();
       if (lastOpener) lastOpener.focus();
     };
