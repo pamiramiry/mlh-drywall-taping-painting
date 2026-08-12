@@ -75,8 +75,8 @@
   --blue-900:   #1B3A5C;
   --blue-700:   #2C5C8C;
   --blue-100:   #E6EEF5;
-  --gold:       #C9972E;
-  --gold-dark:  #A67821;
+  --gold:       #C9972E;              /* decorative + on dark only: 4.40:1 on --blue-900 */
+  --gold-dark:  #8A6316;              /* text-safe gold: 5.42:1 on --paper, 5.00:1 on --fog */
   --paper:      #FFFFFF;
   --fog:        #F4F6F8;
   --line:       #E1E5EA;
@@ -169,6 +169,11 @@ iframe { border: 0; }
 
 section { padding: var(--space-7) 0; }
 .section-alt { background: var(--fog); }
+
+/* Rhythm: the dense, scan-heavy sections get the full 96px, while the short
+   band sections are tightened so the page doesn't march at one interval. */
+.trust-strip, .service-area { padding: var(--space-5) 0; }
+.process, .reviews { padding: var(--space-6) 0; }
 
 /* ===== TYPOGRAPHY ===== */
 h1, h2, h3, h4 {
@@ -356,8 +361,28 @@ p { font-size: 1rem; color: var(--ink-muted); }
   box-shadow: var(--shadow-lg);
   object-fit: cover;
 }
-.hero-media { aspect-ratio: 8 / 5; }
+.hero-media { aspect-ratio: 8 / 5; position: relative; }
 .about-media { aspect-ratio: 5 / 6; }
+
+/* Floating social-proof card, overlapping the hero photo's lower-left corner.
+   Restates the rating already shown in the trust strip and review schema. */
+.hero-proof {
+  position: absolute;
+  left: calc(var(--space-3) * -1);
+  bottom: calc(var(--space-3) * -1);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-2) var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 70%;
+}
+.hero-proof__stars { display: flex; gap: 2px; color: var(--gold); }
+.hero-proof strong { font-family: var(--font-head); font-size: 1.05rem; color: var(--ink); line-height: 1.2; }
+.hero-proof__meta { font-size: 0.8rem; color: var(--ink-muted); }
 
 /* ===== TRUST STRIP ===== */
 .trust-strip { background: var(--blue-900); padding: var(--space-5) 0; }
@@ -379,20 +404,39 @@ p { font-size: 1rem; color: var(--ink-muted); }
   gap: var(--space-3);
 }
 .service-card {
+  position: relative;
+  overflow: hidden;
   background: var(--paper);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: var(--space-4);
-  transition: box-shadow var(--trans), transform var(--trans);
+  box-shadow: var(--shadow);
+  transition: box-shadow var(--trans), transform var(--trans), border-color var(--trans);
 }
-.service-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+/* Gold top edge that wipes in on hover, so the grid has some life without
+   moving anything the eye has to re-find. */
+.service-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 100%;
+  height: 3px;
+  background: var(--gold);
+  transition: right var(--trans);
+}
+.service-card:hover::before { right: 0; }
+.service-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-3px);
+  border-color: transparent;
+}
+
 .service-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 48px; height: 48px;
   border-radius: 10px;
-  background: var(--blue-100);
+  background: linear-gradient(140deg, var(--blue-100), #D6E4F0);
   color: var(--blue-700);
   margin-bottom: var(--space-2);
 }
@@ -420,11 +464,25 @@ p { font-size: 1rem; color: var(--ink-muted); }
 /* ===== PROCESS ===== */
 .process { background: var(--paper); }
 .process-steps {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--space-4);
 }
+/* Connector line threaded behind the step badges, so the three steps read as
+   one sequence instead of three unrelated tiles. */
+.process-steps::before {
+  content: "";
+  position: absolute;
+  top: 58px;
+  left: 12%; right: 12%;
+  height: 2px;
+  background: var(--line);
+  z-index: 0;
+}
 .process-step {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
@@ -432,10 +490,18 @@ p { font-size: 1rem; color: var(--ink-muted); }
   background: var(--fog);
   border-radius: var(--radius);
 }
+/* Gold-on-white measured 2.64:1, below the 3:1 large-text minimum, so the
+   number sits in a blue badge instead: gold on --blue-900 is 4.40:1. */
 .step-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: var(--blue-900);
   font-family: var(--font-head);
   font-weight: 800;
-  font-size: 1.6rem;
+  font-size: 1.25rem;
   color: var(--gold);
 }
 .step-content h3 { margin-bottom: 6px; }
@@ -606,7 +672,7 @@ p { font-size: 1rem; color: var(--ink-muted); }
 }
 .form-input::placeholder,
 .form-textarea::placeholder {
-  color: #A9B2BA;
+  color: #6E777E;                     /* 4.56:1 on --paper; #A9B2BA was 2.15:1 */
 }
 .form-input:focus,
 .form-select:focus,
@@ -715,15 +781,79 @@ p { font-size: 1rem; color: var(--ink-muted); }
 
 /* ===== SUB-PAGE BODY COPY ===== */
 .page-copy { background: var(--paper); }
-.page-copy .container { max-width: 800px; }
-.page-copy p { font-size: 1.05rem; margin-bottom: var(--space-3); }
+/* Constrain the measure, not the container: a centred 800px container left the
+   body copy indented out of line with every other section on the page. */
+.page-copy p { font-size: 1.05rem; margin-bottom: var(--space-3); max-width: 72ch; }
 .page-copy p:last-child { margin-bottom: 0; }
 
-/* ===== PHOTO GALLERY GRID / LIGHTBOX ===== */
-.grid-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-2); }
+/* ===== SERVICE DETAIL: "What's included" + "How we do it" (sub-pages) ===== */
+.service-detail { background: var(--fog); }
+.service-detail__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-6);
+  align-items: start;
+}
+.service-detail__col h2 { font-size: clamp(1.4rem, 2.4vw, 1.75rem); margin-bottom: var(--space-3); }
 
-.gallery-item { position: relative; overflow: hidden; border-radius: var(--radius); cursor: pointer; aspect-ratio: 4 / 3; }
-.gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s var(--ease); }
+.check-list, .step-list { display: flex; flex-direction: column; gap: var(--space-3); }
+.check-list li, .step-list li { display: grid; grid-template-columns: 26px 1fr; gap: var(--space-2); align-items: start; }
+.check-list strong, .step-list strong { grid-column: 2; display: block; font-size: 1rem; color: var(--ink); margin-bottom: 2px; }
+.check-list span, .step-list span { grid-column: 2; font-size: 0.94rem; color: var(--ink-muted); }
+
+/* Gold check glyph, drawn in CSS so it needs no extra markup per item */
+.check-list li::before {
+  content: "";
+  grid-row: 1 / span 2;
+  width: 22px; height: 22px;
+  margin-top: 2px;
+  border-radius: 50%;
+  background: var(--blue-100) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5' stroke='%232C5C8C' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 14px no-repeat;
+}
+
+/* Auto-numbered steps; counter avoids hard-coding "01" into every page */
+.step-list { counter-reset: step; }
+.step-list li { counter-increment: step; }
+.step-list li::before {
+  content: counter(step);
+  grid-row: 1 / span 2;
+  width: 24px; height: 24px;
+  margin-top: 1px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  background: var(--blue-900);
+  color: var(--gold);
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 0.82rem;
+  line-height: 1;
+}
+
+/* ===== PHOTO GALLERY GRID / LIGHTBOX =====
+   CSS columns rather than a grid: most of these photos are portrait (1200x1600),
+   and the old fixed 4/3 crop cut the top and bottom off the tile and bathroom
+   shots. Masonry lets each photo keep its own aspect ratio. */
+.grid-gallery { columns: 3; column-gap: var(--space-2); }
+
+/* Column count follows the number of photos. Service pages carry anywhere from
+   1 to 8, and three columns of a 4-photo set leaves an obvious hole. Browsers
+   without :has() fall back to the 3-column rule above, which is the old
+   behaviour, so this can only improve things. */
+.grid-gallery:has(> .gallery-item:nth-child(2)):not(:has(> .gallery-item:nth-child(6))) { columns: 2; }
+.grid-gallery:not(:has(> .gallery-item:nth-child(2))) { columns: 1; max-width: 640px; }
+/* A lone portrait photo would otherwise run ~1500px tall. */
+.grid-gallery:not(:has(> .gallery-item:nth-child(2))) .gallery-item img { max-height: 560px; object-fit: cover; }
+
+.gallery-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius);
+  cursor: pointer;
+  break-inside: avoid;
+  margin-bottom: var(--space-2);
+  display: block;
+}
+.gallery-item img { width: 100%; height: auto; display: block; transition: transform 0.4s var(--ease); }
 .gallery-item:hover img { transform: scale(1.05); }
 .gallery-item__caption {
   position: absolute; inset: 0;
@@ -763,7 +893,8 @@ p { font-size: 1rem; color: var(--ink-muted); }
 .nav-dropdown { position: relative; }
 .nav-dropdown-trigger { display: flex; align-items: center; gap: 5px; font-weight: 600; font-size: 0.92rem; color: var(--blue-900); white-space: nowrap; padding: 4px 0; }
 .nav-dropdown-caret { transition: transform var(--trans); }
-.nav-dropdown:hover .nav-dropdown-caret, .nav-dropdown:focus-within .nav-dropdown-caret { transform: rotate(180deg); }
+.nav-dropdown:focus-within .nav-dropdown-caret,
+.nav-dropdown.is-open .nav-dropdown-caret { transform: rotate(180deg); }
 .nav-dropdown-menu {
   position: absolute; top: calc(100% + 14px); left: -16px;
   background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius);
@@ -773,7 +904,14 @@ p { font-size: 1rem; color: var(--ink-muted); }
   transition: opacity var(--trans), transform var(--trans), visibility var(--trans);
   z-index: 50;
 }
-.nav-dropdown:hover .nav-dropdown-menu, .nav-dropdown:focus-within .nav-dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+.nav-dropdown:focus-within .nav-dropdown-menu,
+.nav-dropdown.is-open .nav-dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+/* Hover only opens this on devices that hover. On touch, a sticky :hover state
+   left the flyout showing after a tap elsewhere. */
+@media (hover: hover) and (pointer: fine) {
+  .nav-dropdown:hover .nav-dropdown-caret { transform: rotate(180deg); }
+  .nav-dropdown:hover .nav-dropdown-menu { opacity: 1; visibility: visible; transform: translateY(0); }
+}
 .nav-dropdown-menu a { display: block; padding: 9px 12px; border-radius: var(--radius-sm); font-size: 0.9rem; font-weight: 600; color: var(--ink); }
 .nav-dropdown-menu a::after { content: none; }
 .nav-dropdown-menu a:hover, .nav-dropdown-menu a[aria-current="page"] { background: var(--blue-100); color: var(--blue-900); }
@@ -794,18 +932,20 @@ p { font-size: 1rem; color: var(--ink-muted); }
 @media (max-width: 1100px) {
   .services-grid { grid-template-columns: repeat(2, 1fr); }
   .reviews-grid { grid-template-columns: repeat(2, 1fr); }
-  .grid-gallery { grid-template-columns: repeat(2, 1fr); }
+  .grid-gallery { columns: 2; }
 }
 
 @media (max-width: 960px) {
   .main-nav, .header-cta { display: none; }
   .hamburger { display: flex; }
 
-  .hero-inner, .about-inner, .contact-inner { grid-template-columns: 1fr; }
+  .hero-inner, .about-inner, .contact-inner, .service-detail__inner { grid-template-columns: 1fr; }
   .about-media { order: -1; aspect-ratio: 16 / 10; }
+  .hero-proof { left: var(--space-2); bottom: var(--space-2); max-width: none; width: auto; }
 
   .trust-strip-inner { grid-template-columns: repeat(2, 1fr); }
   .process-steps { grid-template-columns: 1fr; }
+  .process-steps::before { display: none; }
   .footer-inner { grid-template-columns: 1fr 1fr; }
 }
 
@@ -814,7 +954,7 @@ p { font-size: 1rem; color: var(--ink-muted); }
   .services-grid { grid-template-columns: 1fr; }
   .form-grid { grid-template-columns: 1fr; }
   .form-grid .span-2 { grid-column: span 1; }
-  .grid-gallery { grid-template-columns: 1fr; }
+  .grid-gallery { columns: 1; }
 
   .reviews-grid {
     display: flex;
