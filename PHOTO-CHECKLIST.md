@@ -42,3 +42,33 @@ Photos are `.webp`, ranging 54KB to 178KB, all within the ~200KB budget, so no f
 ```
 python -c "from PIL import Image; print(Image.open('assets/img/FILENAME.webp').size)"
 ```
+
+## Responsive variants (added in the Aug 2026 pass)
+
+Every photo wider than 800px now also has `-800.webp` and `-1200.webp` versions
+alongside the original, and each `<img>` carries a `srcset`/`sizes` pair. A phone
+downloads the 800px file instead of the 1600px original, which took the gallery
+page from roughly 2.3MB to 1.09MB.
+
+**When you add a new photo, generate its variants too**, or that one photo will
+ship at full size to every device:
+
+```
+python -c "
+from PIL import Image
+p='assets/img/FILENAME.webp'
+im=Image.open(p)
+for t in (800,1200):
+    if im.size[0] > t:
+        r=im.copy(); r.thumbnail((t,t*10), Image.LANCZOS)
+        r.save(p.replace('.webp','-%d.webp'%t),'WEBP',quality=82,method=6)
+"
+```
+
+Then copy the `srcset`/`sizes` pattern from an existing `.gallery-item`. Photos
+narrower than 800px (image7 is 758px) correctly get no variants and serve the
+original.
+
+The gallery is a CSS masonry now, and the column count follows the photo count
+automatically (1 photo = single constrained image, 2-5 = two columns, 6+ =
+three). Adding photos to a page needs no CSS change.
