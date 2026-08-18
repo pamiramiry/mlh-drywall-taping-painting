@@ -829,6 +829,34 @@ p { font-size: 1rem; color: var(--ink-muted); }
   line-height: 1;
 }
 
+/* ===== SERVICE PAGE EXPLAINER (finish levels, board types, sheens, ...) ===== */
+.explainer { background: var(--paper); }
+.explainer__body { max-width: 800px; }
+.explainer__body > p { font-size: 1.05rem; margin-bottom: var(--space-3); }
+
+.spec-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0 0 var(--space-3);
+  border-top: 1px solid var(--line);
+}
+.spec-item {
+  display: grid;
+  grid-template-columns: 190px 1fr;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--line);
+}
+.spec-item dt {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--blue-900);
+  line-height: 1.35;
+}
+.spec-item dd { margin: 0; font-size: 0.98rem; color: var(--ink-muted); }
+
 /* ===== HOMEPAGE WORK PREVIEW =====
    Uniform fixed-ratio tiles, unlike the masonry on gallery.html: a teaser row
    reads as a tidy set, and every tile is a link through to the full gallery. */
@@ -995,6 +1023,7 @@ p { font-size: 1rem; color: var(--ink-muted); }
   section { padding: var(--space-6) 0; }
   .services-grid { grid-template-columns: 1fr; }
   .form-grid { grid-template-columns: 1fr; }
+  .spec-item { grid-template-columns: 1fr; gap: 4px; }
   .form-grid .span-2 { grid-column: span 1; }
   .grid-gallery { columns: 1; }
 
