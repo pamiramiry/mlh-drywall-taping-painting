@@ -55,6 +55,45 @@ the site.
 - Homepage title now targets **Toronto** as well as Scarborough. Toronto previously
   appeared in zero titles and zero H1s despite being the larger market.
 
+## Done on the site (18 Aug, second pass)
+
+The first pass added depth. This one fixed how that depth is connected and found a
+UX bug hiding inside it.
+
+- **Contextual internal links, 2 -> 26.** Every internal link on the site was nav,
+  footer, breadcrumb, or a "Learn More" card, so roughly 40 links pointed at each
+  page and not one of them described what was on the other end. Anchor text is a
+  direct relevance signal and all of it was being spent on the words "Learn More".
+  The service pages already named each other in prose; those mentions are now links.
+- **Prose links were invisible.** The base rule is `a { color: inherit;
+  text-decoration: none }` so that nav and buttons can style themselves, which meant
+  the two in-body links that already existed rendered as plain text. Nobody could
+  click what they could not see. Prose containers now style their links explicitly
+  (blue, underlined, 6.96:1 on white and 6.43:1 on grey, both past AA).
+- **Gallery rebuilt.** It was the second most-linked page on the site, 330 words,
+  21 photos in one undifferentiated grid, and exactly one outbound link. It is now
+  four trade-grouped sections with headings, real context, jump links, and links
+  through to the matching service pages: 638 words and 9 outbound links.
+- **Toronto in the homepage H1.** The title tag started targeting Toronto last pass
+  but the H1 still said Scarborough only. A title that disagrees with its own H1 is
+  more likely to be rewritten by Google.
+- **Sitemap `lastmod` refreshed** to match the day the content actually changed.
+
+## Worth doing, needs facts only the owner has
+
+**Add `sameAs` to the homepage schema.** The `LocalBusiness` block has no `sameAs`
+array, so nothing in the markup tells Google that the site at `mlhrenovations.ca`
+and the Google Business Profile for "MLH Drywall Taping Painting Inc" are the same
+business. That reconciliation matters more here than on a normal site, because the
+domain and the legal name genuinely disagree. It is a five-line change once the
+URLs are confirmed. Needed: the GBP share link, and Facebook / Instagram / HomeStars
+profile URLs if they exist.
+
+**Lower priority:** the photos are named `image1.webp` through `image21.webp`.
+Descriptive filenames are a mild signal for Google Images. Real but small, and it
+invalidates the year-long immutable cache on every one of them, so it is not worth
+a round trip on its own.
+
 ## The biggest lever is not the website
 
 For local trades, most calls come from the **Google Map Pack**, not the organic
