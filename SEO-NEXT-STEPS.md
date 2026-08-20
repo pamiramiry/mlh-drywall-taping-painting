@@ -79,15 +79,88 @@ UX bug hiding inside it.
   more likely to be rewritten by Google.
 - **Sitemap `lastmod` refreshed** to match the day the content actually changed.
 
+## Done on the site (19 Aug, third pass)
+
+Search Console for 10-17 Aug: **113 impressions, 1 click, average position 24.5**.
+
+Read that correctly before reacting to it. At position 24.5 the CTR curve predicts
+well under one click from 113 impressions, so 1 click is at or slightly above
+expectation. Impressions roughly doubled across the window (12/day to 23/day) and
+the first click landed 17 Aug, on the highest-impression day. Position looking worse
+than the 17.5 logged on 18 Aug is also expected: the second pass made nine pages
+rank for many more queries, and new long-tail queries enter low and drag the average
+down. Impressions up while average position falls is the normal shape of a site
+expanding its query footprint.
+
+The query data said two things. Local buying-intent searches are appearing
+("floor installation scarborough" 10, "drywall repair scarborough" 6, "drywall
+contractors in scarborough" 2) but so is a lot of generic informational search
+("mudding drywall", "drywall mud fast drying", "sanding painted drywall") that will
+never hire a Scarborough contractor. And the homepage took 86 of 113 impressions,
+absorbing queries the service pages were written for.
+
+- **Service area trimmed to the winnable ring.** The site claimed Oshawa,
+  Mississauga, Brampton, Vaughan, Barrie and Hamilton: roughly 40 to 110km out, with
+  no page, photo or job behind any of them. Local ranking decays sharply with
+  distance from the verified address, and a broad claim that nothing supports
+  dilutes rather than extends reach. Now Scarborough, Toronto, North York, East
+  York, Markham, Pickering and Ajax, so the site, the schema and the GBP service
+  area can all agree.
+- **Five location pages built**, the largest gap flagged in the last pass:
+  `/service-areas` plus `/drywall-contractor-toronto`, `-north-york`, `-markham`
+  and `-pickering-ajax`. 839 to 1,303 words each. Scarborough deliberately gets no
+  page, because the homepage and the nine service pages already target it and a
+  tenth would compete with them.
+- **Those pages are genuinely distinct, and that was measured, not assumed.**
+  Pairwise body-text similarity runs 0.02 to 0.07. Each leads on a different angle
+  drawn from the actual housing: Toronto on condo logistics (insurance certificates,
+  service elevator windows, 8ft board and the extra butt joints it forces) and
+  plaster-over-lath in pre-war houses; North York on stipple ceilings and bungalow
+  basement headroom; Markham on critical lighting, Level 4 vs Level 5 and settlement
+  nail pops; Pickering and Ajax on two housing eras side by side.
+- **`sameAs` and a Knowledge Graph identifier added** to the homepage schema, from
+  the owner's GBP share link (resolves to `kg:/g/11zfmx934w`). This matters more
+  here than on a normal site because the domain and the legal name disagree.
+- **Generic H2s replaced on all nine service pages.** Every one read "What's
+  included" and "How we do it", spending a heading signal on nothing. Now
+  "What's Included in Our Drywall Repair Service", "How We Repair and Patch
+  Drywall", and so on.
+- **Homepage service blurbs cut roughly in half** (36-52 words down to 15-25) so the
+  detail lives on the service pages rather than competing with them from the
+  homepage.
+- Sitemap now lists 16 URLs. Nav, mobile menu and footer carry Service Areas.
+
+### Deliberately not done
+
+**No guide content for the informational queries.** "Mudding drywall" and
+"drywall mud fast drying" would be easy impressions, but that audience is national
+and does not hire a Scarborough contractor. It would raise impressions without
+raising calls, which flatters the dashboard and does nothing for the phone. Worth
+revisiting only after the local pages settle.
+
+**Homepage title and H1 left alone.** They only started targeting Toronto on 18 Aug
+and Google has not settled on them. Once `/drywall-contractor-toronto` has been
+indexed a few weeks, check whether the two compete on Toronto queries, and only then
+consider narrowing the homepage back to Scarborough.
+
+## Found during this pass, not fixed
+
+**The primary CTA on every sub-page hero is invisible as a button.**
+`.btn-blue` is `background: var(--blue-900)` and `.page-hero` is
+`background: var(--blue-900)`: the same `#1B3A5C`. So "Get a Free Quote" renders as
+plain white text while the secondary "Call" button beside it has a visible outline.
+The primary action looks less clickable than the secondary one, on all nine service
+pages, the gallery and the five new location pages. The text is legible, so this is
+a de-emphasis bug rather than an invisibility one, but it works against exactly the
+conversions this SEO work is meant to produce. Fix is a scoped override on
+`.page-hero__actions .btn-blue`. Left alone because this round was scoped to SEO.
+
 ## Worth doing, needs facts only the owner has
 
-**Add `sameAs` to the homepage schema.** The `LocalBusiness` block has no `sameAs`
-array, so nothing in the markup tells Google that the site at `mlhrenovations.ca`
-and the Google Business Profile for "MLH Drywall Taping Painting Inc" are the same
-business. That reconciliation matters more here than on a normal site, because the
-domain and the legal name genuinely disagree. It is a five-line change once the
-URLs are confirmed. Needed: the GBP share link, and Facebook / Instagram / HomeStars
-profile URLs if they exist.
+**~~Add `sameAs` to the homepage schema.~~ Done 19 Aug** using the owner's GBP share
+link. Still worth adding if they exist: Facebook, Instagram and HomeStars profile
+URLs, and a `maps.app.goo.gl` link from the Maps app Share button, which is a more
+stable form than the `share.google` one currently in the markup.
 
 **Lower priority:** the photos are named `image1.webp` through `image21.webp`.
 Descriptive filenames are a mild signal for Google Images. Real but small, and it

@@ -734,7 +734,7 @@ p { font-size: 1rem; color: var(--ink-muted); }
 .site-footer { background: var(--blue-900); color: rgba(255,255,255,0.85); padding: var(--space-6) 0 var(--space-4); }
 .footer-inner {
   display: grid;
-  grid-template-columns: 1.3fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1.25fr 1fr 0.85fr 1fr 0.95fr 0.95fr;
   gap: var(--space-4);
   padding-bottom: var(--space-4);
   border-bottom: 1px solid rgba(255,255,255,0.15);
@@ -778,6 +778,23 @@ p { font-size: 1rem; color: var(--ink-muted); }
 .page-hero h1 { color: var(--paper); max-width: 22ch; margin-bottom: var(--space-2); }
 .page-hero .lead { color: rgba(255,255,255,0.85); font-size: 1.1rem; max-width: 60ch; margin-bottom: var(--space-4); }
 .page-hero__actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+/* The primary CTA was invisible as a button here: .btn-blue is --blue-900 and so is
+   .page-hero, the same #1B3A5C, so "Get a Free Quote" rendered as bare text beside an
+   outlined secondary button. Invert it on the dark hero so the primary action reads as
+   the primary action. --blue-900 on --paper is 11.6:1. */
+.page-hero__actions .btn-blue {
+  background: var(--paper);
+  color: var(--blue-900);
+}
+.page-hero__actions .btn-blue:hover {
+  background: var(--blue-100);
+  color: var(--blue-900);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+/* The global focus ring is --blue-700, roughly 1.5:1 against this hero and so
+   effectively invisible to keyboard users. */
+.page-hero__actions .btn:focus-visible { outline-color: var(--paper); }
 
 /* ===== SUB-PAGE BODY COPY ===== */
 .page-copy { background: var(--paper); }
@@ -1032,6 +1049,11 @@ p { font-size: 1rem; color: var(--ink-muted); }
 
 /* ===== MEDIA QUERIES (desktop-first) ===== */
 @media (max-width: 1100px) {
+  /* Seven top-level nav items no longer fit beside the logo and the header CTA:
+     below this the header overflowed horizontally. Hamburger from here down. */
+  .main-nav, .header-cta { display: none; }
+  .hamburger { display: flex; }
+  .footer-inner { grid-template-columns: repeat(3, 1fr); }
   .services-grid { grid-template-columns: repeat(2, 1fr); }
   .work-grid { grid-template-columns: repeat(2, 1fr); }
   .reviews-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1039,8 +1061,6 @@ p { font-size: 1rem; color: var(--ink-muted); }
 }
 
 @media (max-width: 960px) {
-  .main-nav, .header-cta { display: none; }
-  .hamburger { display: flex; }
 
   .hero-inner, .about-inner, .contact-inner, .service-detail__inner { grid-template-columns: 1fr; }
   .about-media { order: -1; aspect-ratio: 16 / 10; }
@@ -1049,7 +1069,6 @@ p { font-size: 1rem; color: var(--ink-muted); }
   .trust-strip-inner { grid-template-columns: repeat(2, 1fr); }
   .process-steps { grid-template-columns: 1fr; }
   .process-steps::before { display: none; }
-  .footer-inner { grid-template-columns: 1fr 1fr; }
 }
 
 @media (max-width: 640px) {
