@@ -155,6 +155,43 @@ a de-emphasis bug rather than an invisibility one, but it works against exactly 
 conversions this SEO work is meant to produce. Fix is a scoped override on
 `.page-hero__actions .btn-blue`. Left alone because this round was scoped to SEO.
 
+**Fixed 19 Aug** in the same commit as the location pages, at the owner's go-ahead:
+the primary CTA is now solid white on the navy hero, with the focus ring overridden
+to white so it is actually visible to keyboard users. Went live 30 Aug.
+
+## Done on the site (30 Aug, fourth pass)
+
+**Everything from the third pass finally went live.** The 19 Aug work was committed
+but never pushed, so for eleven days production kept serving the 18 Aug build: an
+11-URL sitemap, no location pages, no Service Areas footer column. Pushed 30 Aug and
+verified live. Worth stating plainly because it is the single largest thing that
+happened this round: none of the previous pass could rank while it sat unpushed.
+
+**Built `/about` and `/contact` as real, indexable pages.** They were homepage anchors
+(`/#about`, `/#contact`), which meant the two pages every local searcher looks for
+had no URL, no title, and no ability to rank. A dedicated contact page carrying the
+full NAP, hours, map and service area is a standard local-SEO asset, and "about"
+queries are how people check a contractor is real before calling.
+
+The homepage keeps both sections, so the one-page flow is untouched: the new pages
+are additions, not replacements. Homepage nav still scrolls to its own sections; the
+other 17 pages now point at the real URLs, and the homepage links to both from body
+copy so they inherit equity from the strongest page.
+
+Both pages carry `ContactPage` / `AboutPage` schema referencing the existing business
+node, plus breadcrumbs. The about page makes **no new claims**: every statement on it
+already appeared elsewhere on the site. No invented credentials, team size or job
+counts.
+
+**Wiring**, since the location pages taught us that unlinked pages do not get crawled:
+`/contact` now has 103 inbound internal links and `/about` 53. Sitemap 16 to 18 URLs.
+
+Verified: 19 files, 0 problems on the full sweep (JSON-LD parses, single H1, no
+heading jumps, canonicals correct, no duplicate titles or descriptions, no broken
+internal links, no missing assets, all `styles.css?v=8`). Rendered both pages at
+1440/1024/390 with no console errors, no horizontal overflow, form validation firing
+and the hours table highlighting the correct day.
+
 ## Worth doing, needs facts only the owner has
 
 **~~Add `sameAs` to the homepage schema.~~ Done 19 Aug** using the owner's GBP share
@@ -167,62 +204,160 @@ Descriptive filenames are a mild signal for Google Images. Real but small, and i
 invalidates the year-long immutable cache on every one of them, so it is not worth
 a round trip on its own.
 
-## The biggest lever is not the website
+---
 
-For local trades, most calls come from the **Google Map Pack**, not the organic
-listings underneath it. The site supports the profile; it rarely outranks it.
-This section needs owner access, and it outweighs everything above.
+# The off-site playbook
 
-### Google Business Profile
-1. **Reviews are the single biggest factor.** 9 reviews against competitors with
-   dozens is the gap that matters most. Build a routine: ask every satisfied
-   customer at handover, with a short link ready to send by text.
-2. **Primary category** should be `Drywall Contractor`. Add secondary categories for
-   Painter, Tile Contractor, Flooring Contractor, General Contractor.
-3. **Services list**: add all nine, using the same names as the website.
-4. **Photos**: 21 real job-site photos are already on the site and are a genuine
-   asset. Upload them to the profile too, and keep adding new ones. Profiles with
-   recent photos get more engagement.
-5. **Posts**: a short update every week or two, ideally a recent job with a photo.
-6. **Q&A**: seed it with the questions now answered on the service pages.
-7. **Service area**: match what the site claims, so the two do not disagree.
+Everything above is on-site work, and on-site is now in good shape. This section is
+not. **It is where the remaining ranking is**, and almost all of it needs the owner,
+not the developer.
 
-### Directories and citations
-Two of the results outranking MLH for "drywall contractor Scarborough" are
-directories, not contractors. Being listed there puts MLH in front of the same
-searchers:
+The honest picture as of 30 Aug: searching the open web for this business returns
+**nothing**. No HomeStars, no Yelp, no YellowPages, no 411, no Facebook. The only
+"MLH Renovations" that surfaces is an unrelated company in Brier, Washington. For a
+local trade that is a serious gap, because most calls come from the **Google Map
+Pack**, not the organic listings under it, and the Map Pack runs on profile signals,
+reviews and citations rather than on page content.
 
-- HomeStars (dominant for GTA trades)
-- RenoQuotes
-- Yelp
-- Bing Places
-- Apple Business Connect
-- Yellow Pages
+## Step 0: the NAP block
 
-Use **identical** name, address and phone everywhere: `MLH Drywall Taping Painting Inc`,
-`567 Scarborough Golf Club Rd`, `(647) 531-8731`. Inconsistency across listings is a
-known local-ranking problem.
+Every listing below must use these three lines **character for character**. Google
+cross-references business details across the web, and inconsistent formatting
+("Rd" vs "Road", "647-531-8731" vs "(647) 531-8731") weakens the match. Copy and
+paste, do not retype:
 
-### Search Console
-Confirm `www.mlhrenovations.ca` is added and the sitemap submitted, then watch the
-**Pages** report for "Duplicate, Google chose a different canonical". Given the
-canonicals pointed at a nonexistent domain from day one, that report tells you
-whether the site was ever properly indexed.
+```
+MLH Drywall Taping Painting Inc
+567 Scarborough Golf Club Rd, Scarborough, ON M1G 1H5
+(647) 531-8731
+https://www.mlhrenovations.ca/
+```
 
-## The next website decision, when you want it
+This matches the site's schema and footer exactly. If any listing already exists with
+a different format, fix the listing rather than the site.
 
-**City x service landing pages.** Every competitor currently outranking MLH uses this
-exact URL pattern:
+## Step 1: Google Business Profile
 
-- `konstruction.ca/services/drywall-contractor-scarborough`
-- `torontodrywallpro.ca/service-areas/scarborough/`
-- `ontariodrywallandtaping.ca/drywall-contractors-scarborough/`
-- `drywalltoronto.com/drywall-contractors-scarborough/`
+This outranks every other item in this document.
 
-MLH has none, and no Toronto presence in any H1. This is the largest remaining
-on-site opportunity. It only works if each page carries genuinely distinct content;
-find-and-replacing a city name across nine templates is the version that gets
-ignored or penalised. Start with Toronto and the two or three strongest services.
+**Reviews are the single biggest factor.** MLH has 9. Competitors have dozens. This
+one number probably explains more of the ranking gap than everything else combined,
+and it is the only item here with no shortcut.
+
+Build it into the job rather than doing it in bursts. At handover, while the customer
+is still standing in the finished room, ask in person and then send the link. Asking
+by text hours later converts far worse than asking to their face and then following
+up with the link you already have open.
+
+A message that works, kept short because long ones do not get read:
+
+> Thanks again for having us in, [name]. If the walls turned out how you hoped,
+> a quick Google review really helps a small business like ours get found:
+> [review link]. No worries at all if you'd rather not.
+
+Get the short link from the profile's **Ask for reviews** button. Reply to every
+review, positive or negative, ideally within a day. Replies are visible to searchers
+and are a documented engagement signal.
+
+**Primary category:** `Drywall Contractor`. This matters more than most owners expect,
+because the primary category does most of the work in deciding which searches the
+profile can appear for at all.
+
+**Secondary categories:** Painter, Tile Contractor, Flooring Contractor,
+General Contractor.
+
+**Service area:** set it to the same ring the site claims, and no wider. Scarborough,
+Toronto, North York, East York, Markham, Pickering, Ajax. Claiming the entire GTA
+looks stronger and performs worse: it dilutes relevance for the places jobs actually
+come from, and the site and profile then disagree, which helps neither.
+
+**Services:** add all nine using the exact names below, and paste the descriptions
+straight in. These are drawn from the site's own service pages so the wording stays
+consistent between profile and site:
+
+- **Framing**: New partition walls, bulkheads and ceilings framed straight, square
+  and on-layout, ready for board.
+- **Drywall Installation**: Board hung plumb and square with tight, staggered joints,
+  prepped so the taping stage can reach a flawless finish.
+- **Taping & Mudding**: Multiple coats of tape and compound, sanded and inspected
+  under raking light so seams disappear completely.
+- **Drywall Repair & Patching**: Holes, cracks, nail pops and water damage repaired
+  and blended so the patch does not show once the wall is painted.
+- **Popcorn Ceiling Removal**: Textured stipple ceilings taken back to a flat, modern
+  finish, with the room protected and the ceiling refinished properly afterwards.
+- **Interior & Exterior Painting**: Surfaces properly prepped, filled and primed,
+  with clean cut lines and even coverage inside and out.
+- **Tiling**: Backsplash, shower and floor tile set on a flat, prepared substrate
+  with straight, consistent grout lines.
+- **Flooring**: Laminate and vinyl plank installed over a checked and levelled
+  subfloor, with the right underlay for the space.
+- **Basement Drywall Finishing**: Unfinished basements turned into livable square
+  footage: framing, board, tape, paint and floor, finished as one job.
+
+**Photos:** 21 real job-site photos are already on the site. Upload them to the
+profile as well, and add new ones as jobs finish. Profiles with recent photos get
+measurably more engagement, and photo recency is something Google can see.
+
+**Posts:** a short update every week or two, ideally one recent job with a photo.
+
+**Q&A:** seed it. The service pages now answer roughly forty real questions between
+them, and the FAQ answers can be pasted straight in. A profile with answered
+questions converts better than an empty one, and you control the framing.
+
+## Step 2: citations, in this order
+
+Do them in this order. The first three are free, fast, and feed each other.
+
+1. **Bing Places**: imports directly from Google Business Profile, so it is close to
+   a one-click listing. Bing also feeds business data to other services.
+2. **Bing Webmaster Tools**: imports directly from Search Console. Submit the
+   sitemap while there. Bing traffic is small but the setup cost is minutes.
+3. **Apple Business Connect**: free, and it is what Apple Maps and Siri use. Anyone
+   on an iPhone asking for a drywall contractor nearby is querying this, not Google.
+4. **HomeStars**: the dominant directory for GTA trades, and one of the results
+   currently outranking MLH. Being listed there puts MLH in front of the same
+   searchers who are already finding competitors that way.
+5. **Houzz**: note that an unrelated "MLH Renovations" already exists there in
+   Washington state. Make the Scarborough location prominent so the two do not blur.
+6. **Yelp**: lower value in Canada than the US, still a recognised citation source.
+7. **YellowPages.ca** and **411.ca**: straightforward Canadian citations.
+8. **Facebook Page**: worth having for the citation alone, even without posting much.
+
+Each of these, once live, becomes a `sameAs` URL for the homepage schema. Send them
+over as they go up and they get added.
+
+## Step 3: Search Console, right now
+
+Two things to do the moment the deploy lands, both of which the owner or whoever has
+access needs to do:
+
+1. **Sitemaps → resubmit `sitemap.xml`.** It now lists 18 URLs; Google last saw 11.
+2. **URL Inspection → Request indexing** on each new URL, one at a time:
+   `/service-areas`, `/drywall-contractor-toronto`, `/drywall-contractor-north-york`,
+   `/drywall-contractor-markham`, `/drywall-contractor-pickering-ajax`, `/about`,
+   `/contact`, and the homepage.
+
+Then watch the **Pages** report for "Duplicate, Google chose a different canonical".
+Given the canonicals pointed at a nonexistent domain from day one, that report is
+what tells you whether the site was ever properly indexed.
+
+## What to watch, and what not to panic about
+
+**Expect average position to get worse before it gets better.** Seven new pages will
+start ranking for many new queries, and new long-tail queries enter low and drag the
+average down. Impressions rising while average position falls is the normal shape of
+a site expanding its query footprint, not a problem to fix.
+
+**Do watch for cannibalization.** The homepage title targets "Drywall Contractor
+Scarborough & Toronto" and `/drywall-contractor-toronto` targets "Drywall Contractor
+in Toronto". Those genuinely compete. Leave it for now, since the Toronto page has
+not been indexed long enough for Google to settle. In a few weeks, check the GSC
+query report: if the two pages keep swapping places on Toronto queries, narrow the
+homepage back to Scarborough and let the Toronto page own that term.
+
+**Give it time.** New pages typically take weeks to settle, and a domain this young
+has little authority to push them up quickly. The off-site work above is what
+shortens that curve.
 
 ## Still outstanding elsewhere
 
@@ -231,4 +366,6 @@ ignored or penalised. Start with Toronto and the two or three strongest services
   producing the only buyer-intent query.
 - The quote form is still `mailto:`, which silently loses anyone on webmail or
   without a configured mail app. It remains the largest lead-loss risk on the site,
-  and it matters more the moment traffic actually arrives.
+  and it now matters on two pages rather than one. It matters more the moment the
+  traffic this work is chasing actually arrives.
+- Social and directory URLs for `sameAs`, as they go live.
