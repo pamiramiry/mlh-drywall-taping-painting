@@ -13,6 +13,25 @@
     if (openOverlays === 0) document.body.style.overflow = '';
   }
 
+  /* ===== ANALYTICS (GA4) =====
+     Thin wrapper so every call site stays a one-liner and nothing throws when
+     gtag is missing: ad blockers and privacy browsers routinely drop it. */
+  function track(name, params) {
+    if (typeof window.gtag !== 'function') return;
+    params = params || {};
+    params.page = window.location.pathname;
+    window.gtag('event', name, params);
+  }
+
+  /* Where on the page a contact link was clicked, so calls from the sticky
+     mobile bar can be told apart from calls out of the header or footer. */
+  function clickArea(el) {
+    if (el.closest('#mobile-call-bar')) return 'mobile_bar';
+    if (el.closest('.site-header')) return 'header';
+    if (el.closest('.site-footer')) return 'footer';
+    return 'inline';
+  }
+
   /* ===== FOCUS TRAP (shared by the mobile menu and the lightbox) =====
      Keeps Tab inside an open overlay. Returns a function that removes it. */
   var FOCUSABLE = 'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])';
@@ -144,6 +163,7 @@
         button.setAttribute('aria-expanded', 'true');
         panel.hidden = false;
         button.closest('.faq-item').classList.add('open');
+        track('faq_expand', { question: (button.textContent || '').trim().slice(0, 100) });
       }
     });
   });
@@ -270,6 +290,7 @@
         lockScroll();
         releaseLightboxTrap = trapFocus(lightbox);
         lightboxClose.focus();
+        track('gallery_open', { image: (img.alt || '').trim().slice(0, 100) });
       };
       item.addEventListener('click', activate);
       item.addEventListener('keydown', function (e) {
@@ -394,6 +415,12 @@
         '?subject=' + encodeURIComponent(subject) +
         '&body=' + encodeURIComponent(body);
 
+      /* Fire before the mailto hand-off: once the mail app takes over the page
+         can be frozen or backgrounded and the beacon is lost. Note this counts
+         mail clients *opened*, not messages actually sent, so it is an upper
+         bound on real leads (see the mailto caveat in SEO-NEXT-STEPS.md). */
+      track('generate_lead', { service: serviceLabel });
+
       window.location.href = mailto;
 
       var success = form.querySelector('.form-success');
@@ -403,5 +430,37 @@
       }
     });
   }
+
+  /* ===== ANALYTICS: CONTACT & CTA CLICKS =====
+     One delegated listener rather than binding the ~120 tel: links and ~42
+     WhatsApp links individually. Fires on capture-free bubble, so it still
+     runs for links added later and costs nothing per page. */
+  document.addEventListener('click', function (e) {
+    var link = e.target.closest ? e.target.closest('a[href]') : null;
+    if (!link) return;
+    var href = link.getAttribute('href') || '';
+
+    if (href.indexOf('tel:') === 0) {
+      track('phone_call', { location: clickArea(link) });
+      return;
+    }
+    if (href.indexOf('wa.me') !== -1) {
+      track('whatsapp_click', { location: clickArea(link) });
+      return;
+    }
+    if (href.indexOf('google.com/maps/dir') !== -1) {
+      track('directions_click', {});
+      return;
+    }
+    if (href.indexOf('mailto:') === 0) {
+      track('email_click', { location: clickArea(link) });
+      return;
+    }
+    /* Quote CTAs only: plain nav links to /contact shouldn't count. */
+    if (link.classList.contains('btn') &&
+        (href.indexOf('contact') !== -1 || href === '#quote-form')) {
+      track('quote_button_click', { label: (link.textContent || '').trim().slice(0, 60) });
+    }
+  });
 
 })();

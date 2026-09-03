@@ -749,6 +749,7 @@ p { font-size: 1rem; color: var(--ink-muted); }
 .footer-hours p { color: rgba(255,255,255,0.85); font-size: 0.92rem; }
 .footer-bottom { padding-top: var(--space-3); text-align: center; font-size: 0.82rem; }
 .footer-bottom p { color: rgba(255,255,255,0.75); }
+.footer-bottom a { font-size: inherit; text-decoration: underline; text-underline-offset: 2px; }
 
 /* ===== STICKY MOBILE CALL BAR ===== */
 .mobile-call-bar {
@@ -802,6 +803,16 @@ p { font-size: 1rem; color: var(--ink-muted); }
    body copy indented out of line with every other section on the page. */
 .page-copy p { font-size: 1.05rem; margin-bottom: var(--space-3); max-width: 72ch; }
 .page-copy p:last-child { margin-bottom: 0; }
+/* The global reset strips bullets so nav and card lists stay clean. Prose
+   pages (privacy policy) need them back. */
+.page-copy ul { list-style: disc; padding-left: 1.3em; margin-bottom: var(--space-3); max-width: 72ch; }
+.page-copy li { font-size: 1.05rem; margin-bottom: 8px; }
+.page-copy li:last-child { margin-bottom: 0; }
+.page-copy code { font-size: 0.94em; background: var(--fog); padding: 1px 5px; border-radius: 3px; }
+/* Legal pages run many short sections, where the full-size h2 reads like a
+   page title each time. Section-heading scale instead. */
+.page-copy--legal h2 { font-size: clamp(1.25rem, 2.2vw, 1.5rem); margin-bottom: var(--space-2); }
+.page-copy--legal h2:not(:first-child) { margin-top: var(--space-4); }
 
 /* ===== PROSE LINKS =====
    The base rule is `a { color: inherit; text-decoration: none }` so that nav
