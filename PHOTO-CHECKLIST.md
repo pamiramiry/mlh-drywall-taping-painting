@@ -6,6 +6,9 @@ The site now uses **21 real job-site photos** sent by the client (`assets/img/im
 
 Each photo lives on exactly one service page, no photo is reused across two different pages, so every page's gallery is genuinely distinct. (The homepage hero and `gallery.html` are the only intentional exceptions: `gallery.html` is a comprehensive index of all 21 photos by design, and the homepage hero photo is separate from any service page's gallery.)
 
+**One further exception, added 9 Sep 2026:** `image16` and `image20` each appear on two
+service pages. See "The basement page exception" below before treating this as drift.
+
 | Service page | Photos used |
 |---|---|
 | Framing (`framing.html`) | image7 |
@@ -14,12 +17,32 @@ Each photo lives on exactly one service page, no photo is reused across two diff
 | Drywall Repair & Patching (`drywall-repair.html`) | **none, gap, see below** |
 | Popcorn Ceiling Removal (`popcorn-ceiling-removal.html`) | **none, gap, see below** |
 | Interior & Exterior Painting (`painting.html`) | image5, image11, image19 |
-| Tiling (`tiling.html`) | image1, image3, image6, image12, image13, image16, image17, image21 |
-| Flooring (`flooring.html`) | image20, **thin, only one photo, see below** |
-| Basement Drywall Finishing (`basement-finishing.html`) | image4, image14 |
+| Tiling (`tiling.html`) | image1, image3, image6, image12, image13, image16\*, image17, image21 |
+| Flooring (`flooring.html`) | image20\*, **thin, only one photo, see below** |
+| Basement Finishing (`basement-finishing.html`) | image4, image14, image16\*, image20\* |
 | Homepage hero | image8 |
 | Homepage About section | image18 |
 | `gallery.html` | All 21 photos shown in one flat grid, no filtering |
+
+### The basement page exception (\*)
+
+`image16` (basement bathroom tile) and `image20` (finished basement floor) are the two
+photos marked `*` above, and each now appears on two service pages.
+
+This is deliberate, and it is bounded to these two files. When
+`basement-finishing.html` was rewritten to target basement *renovation* rather than
+basement drywall, the page started claiming the full finish: framing through to tile and
+floor. A page that claims it and then shows only bare taped drywall undercuts itself. Both
+photos are of a basement, so they belong on the basement page as much as they belong where
+they already were.
+
+They were **copied, not moved**. `/tiling` keeps all eight of its photos and `/flooring`
+keeps the only one it has, so neither page was weakened to strengthen a third.
+
+Do not read this as licence to reuse photos generally. The distinctness rule is what stops
+the galleries turning into the same six pictures shuffled; this exception exists because
+one job legitimately spans three service pages, which is the argument the basement page is
+making in the first place.
 
 **Note:** `gallery.html` no longer has service filter buttons. They were tried, but with only 6 of the 9 services having real photos, showing filters for some services and not others looked inconsistent next to the 9-item Services menu. A flat grid of all 21 photos avoids that mismatch. If every service eventually has photos, filtering could be reintroduced.
 

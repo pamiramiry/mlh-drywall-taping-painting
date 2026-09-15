@@ -192,6 +192,84 @@ internal links, no missing assets, all `styles.css?v=8`). Rendered both pages at
 1440/1024/390 with no console errors, no horizontal overflow, form validation firing
 and the hours table highlighting the correct day.
 
+## Done on the site (9 Sep 2026, fifth pass)
+
+**`/basement-finishing` repositioned from a drywall stage to a renovation.** The page sold
+"Basement Drywall Finishing": that phrase was in the title, the H1, the schema, the nav
+label and the homepage card. It capped the page at drywall-shaped queries while the
+business does the whole finish. The two searches worth having, **"basement finishing
+Scarborough"** and **"basement renovation Scarborough"**, were not phrases the page
+contained anywhere. "Drywall for basement" had already shown up in the query data, so the
+topic has demand and the page was under-serving it.
+
+New title, description, H1, OG/Twitter pairs, `Service` schema (`name` and `serviceType`
+now say Renovation) and `BreadcrumbList`. The URL is unchanged: `/basement-finishing`
+keeps whatever equity it has.
+
+**Three sections the page did not have**, all answering questions people actually type
+before hiring:
+
+- **Permits and inspections.** Scarborough is inside the City of Toronto, so the permit
+  comes from the City, and separate suites carry egress, fire separation and ceiling
+  height requirements on top. Deliberately general: no code sections, no fee figures, no
+  legal claims, and it states plainly that the homeowner pulls the permit unless agreed
+  otherwise.
+- **How long it takes.** Three to six weeks for a typical 800 sq ft basement, with the
+  rough-ins and the inspection schedule named as what actually moves it.
+- **What it costs.** Three-row range table: drywall-only, full finish, full finish with a
+  bathroom, plus the four things that push a job to the top of its range.
+
+**The cost section publishes no dollar figures, and that is the settled answer, not a gap.**
+It first shipped with six `[[PLACEHOLDER]]` tokens waiting on ranges from the owner. The
+owner cannot supply them, so on 15 Sep the price table was replaced with a **scope
+comparison**: the same three tiers, each describing what is in it and why it costs more
+than the one above, built on the existing `.spec-list` component. Nothing was invented and
+nothing is pending.
+
+Three things about that, because the reasoning is easy to lose:
+
+- **The section stays even without numbers.** "How much does it cost to finish a basement
+  in Scarborough" is one of the highest-intent queries this page can own. A section that
+  answers the real question (what am I paying for, what makes it more) ranks and converts;
+  deleting it would forfeit the query outright.
+- **Do not re-add a price table later** on the assumption the numbers were simply forgotten.
+  They were asked for and are not available.
+- **Do not fill it with third-party GTA averages.** Publishing someone else's figures as if
+  they described MLH's pricing misrepresents the business, and it is worse than no numbers
+  because it reads as authoritative.
+
+**Label renamed site-wide**, "Basement Drywall Finishing" to "Basement Finishing", across
+the nav dropdown, mobile menu, related-service cards, both quote-form dropdowns and the
+homepage `Offer` schema, on all 20 pages. Only the footer had said it correctly. The ~26
+prose links across the site already used "basement finishing" as anchor text, so this
+brings the nav into line with them rather than the reverse. Homepage card blurb now says
+"full basement renovation".
+
+**A prose-link visibility bug, found while doing it.** The 18 Aug pass named the prose
+containers that need explicit link styling, because the base rule is `a { color: inherit;
+text-decoration: none }`. `.check-list` was not on that list. The new "What's included"
+list links each stage to its service page, and every one of those links would have
+rendered as plain black text: invisible, unclickable-looking, and the anchor text wasted.
+`.check-list span a` is now in the selector group. This is the same class of bug the
+second pass fixed for `.page-copy`, and it is worth checking whenever links are added to
+a component that has never carried one.
+
+**`styles.css?v=9` to `?v=10` on all 20 pages**, since the stylesheet changed and the
+cache is long-lived. Sitemap `lastmod` bumped for `/` and `/basement-finishing` only; the
+other 18 pages changed by one nav label and are not worth re-signalling.
+
+Page is 1,050 to 1,200 words with "Scarborough" appearing six times in the body, which is
+in line with the other service pages rather than stuffed.
+
+### Deliberately not done
+
+**The "What Makes a Basement Different" explainer was removed, not kept.** Its five points
+had become duplicates once the page had real sections: moisture is now FAQ 4, material
+choice is two items in the What's Included list, ceiling height is in both the permits and
+the cost sections, and egress is covered properly under permits instead of in a one-line
+gloss. Keeping it would have pushed the page past 1,400 words by repeating itself, which
+is the kind of padding that reads as written-for-Google.
+
 ## Worth doing, needs facts only the owner has
 
 **~~Add `sameAs` to the homepage schema.~~ Done 19 Aug** using the owner's GBP share
@@ -291,8 +369,8 @@ consistent between profile and site:
   with straight, consistent grout lines.
 - **Flooring**: Laminate and vinyl plank installed over a checked and levelled
   subfloor, with the right underlay for the space.
-- **Basement Drywall Finishing**: Unfinished basements turned into livable square
-  footage: framing, board, tape, paint and floor, finished as one job.
+- **Basement Finishing**: Unfinished basements turned into livable square
+  footage: framing, board, tape, paint, tile and floor, finished as one job.
 
 **Photos:** 21 real job-site photos are already on the site. Upload them to the
 profile as well, and add new ones as jobs finish. Profiles with recent photos get
