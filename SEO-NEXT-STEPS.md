@@ -442,8 +442,11 @@ shortens that curve.
 - Photos for drywall-installation, drywall-repair and popcorn-ceiling-removal, which
   still show a "coming soon" message. More flooring photos too, given flooring is
   producing the only buyer-intent query.
-- The quote form is still `mailto:`, which silently loses anyone on webmail or
-  without a configured mail app. It remains the largest lead-loss risk on the site,
-  and it now matters on two pages rather than one. It matters more the moment the
-  traffic this work is chasing actually arrives.
+- ~~The quote form is still `mailto:`~~ **Resolved 21 Sept 2026.** The form now POSTs
+  to `/api/quote`, a Vercel function that sends the email through Resend. The visitor
+  never leaves the page and never needs a mail app, so the webmail and no-mail-client
+  losses are gone. Hitting Reply in the inbox answers the customer directly.
+  Side effect worth knowing: GA4 `generate_lead` now fires on a confirmed send rather
+  than on a mail app opening, so the number will read lower than early September even
+  though the form converts better. The old count was an upper bound; this one is real.
 - Social and directory URLs for `sameAs`, as they go live.

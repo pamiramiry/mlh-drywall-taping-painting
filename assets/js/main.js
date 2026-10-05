@@ -391,9 +391,9 @@
         return;
       }
 
-      /* No backend: build a pre-filled email to the business and open the
-         visitor's mail app. The visitor still has to press Send. */
-      var to = form.getAttribute('data-mailto');
+      /* Post to the site's own /api/quote function, which sends the mail
+         server side. No mail app is involved: the visitor stays on the page
+         and gets an inline confirmation. */
       var getVal = function (id) {
         var el = form.querySelector('#' + id);
         return el ? el.value.trim() : '';
@@ -403,31 +403,91 @@
         ? serviceEl.options[serviceEl.selectedIndex].text
         : 'Not specified';
 
-      var subject = 'New Quote Request | MLH Drywall Taping Painting';
-      var body =
-        'Name: ' + getVal('name') + '\n' +
-        'Phone: ' + getVal('phone') + '\n' +
-        'Email: ' + getVal('email') + '\n' +
-        'Service Needed: ' + serviceLabel + '\n\n' +
-        'Project Details:\n' + getVal('details') + '\n';
+      /* Kept for the failure path only. If the send fails we hand the visitor
+         a pre-filled draft so nothing they typed is lost. */
+      var buildMailto = function () {
+        var subject = 'New Quote Request | MLH Drywall Taping Painting';
+        var body =
+          'Name: ' + getVal('name') + '\n' +
+          'Phone: ' + getVal('phone') + '\n' +
+          'Email: ' + getVal('email') + '\n' +
+          'Service Needed: ' + serviceLabel + '\n\n' +
+          'Project Details:\n' + getVal('details') + '\n';
+        return 'mailto:' + form.getAttribute('data-mailto') +
+          '?subject=' + encodeURIComponent(subject) +
+          '&body=' + encodeURIComponent(body);
+      };
 
-      var mailto = 'mailto:' + to +
-        '?subject=' + encodeURIComponent(subject) +
-        '&body=' + encodeURIComponent(body);
-
-      /* Fire before the mailto hand-off: once the mail app takes over the page
-         can be frozen or backgrounded and the beacon is lost. Note this counts
-         mail clients *opened*, not messages actually sent, so it is an upper
-         bound on real leads (see the mailto caveat in SEO-NEXT-STEPS.md). */
-      track('generate_lead', { service: serviceLabel });
-
-      window.location.href = mailto;
-
+      var submitBtn = form.querySelector('button[type="submit"]');
       var success = form.querySelector('.form-success');
-      if (success) {
-        success.hidden = false;
-        success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      var fallback = form.querySelector('.form-fallback');
+      var honeypot = form.querySelector('[name="_gotcha"]');
+
+      /* Disabling the button is not enough on its own: pressing Enter in a
+         text field still fires submit while it is disabled. */
+      if (form.getAttribute('data-sending') === 'true') return;
+      form.setAttribute('data-sending', 'true');
+
+      var restore = function () {
+        form.setAttribute('data-sending', 'false');
+        if (!submitBtn) return;
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = submitBtn.getAttribute('data-label');
+      };
+
+      if (submitBtn) {
+        if (!submitBtn.getAttribute('data-label')) {
+          submitBtn.setAttribute('data-label', submitBtn.innerHTML);
+        }
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending\u2026';
       }
+      if (fallback) fallback.hidden = true;
+
+      fetch('/api/quote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: getVal('name'),
+          phone: getVal('phone'),
+          email: getVal('email'),
+          service: serviceLabel,
+          details: getVal('details'),
+          source: window.location.pathname,
+          _gotcha: honeypot ? honeypot.value : ''
+        })
+      }).then(function (res) {
+        if (!res.ok) throw new Error('/api/quote returned ' + res.status);
+
+        form.reset();
+        form.querySelectorAll('.is-valid, .is-error').forEach(function (field) {
+          field.classList.remove('is-valid');
+          field.classList.remove('is-error');
+          field.removeAttribute('aria-invalid');
+        });
+        form.querySelectorAll('.form-error').forEach(function (el) {
+          el.textContent = '';
+          el.style.display = 'none';
+        });
+
+        if (success) {
+          success.hidden = false;
+          success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        /* Fires only once the server confirms the send, so this counts
+           requests actually delivered rather than mail apps opened. */
+        track('generate_lead', { service: serviceLabel });
+      }).catch(function (err) {
+        /* Never show a confirmation we cannot stand behind. Offer the phone,
+           WhatsApp and a pre-filled draft instead, so the lead is not lost. */
+        if (window.console && console.warn) console.warn('Quote form:', err);
+        if (fallback) {
+          var draft = fallback.querySelector('[data-mailto-fallback]');
+          if (draft) draft.setAttribute('href', buildMailto());
+          fallback.hidden = false;
+          fallback.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }).then(restore, restore);
     });
   }
 
