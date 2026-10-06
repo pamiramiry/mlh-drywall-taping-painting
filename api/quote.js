@@ -48,6 +48,14 @@ function oneLine(value) {
   return String(value).replace(/[\r\n]+/g, ' ').trim();
 }
 
+/* The raw pathname is meaningless to whoever reads the email. Only two
+   pages carry a form, so a plain label beats '/' or '/contact'. */
+function pageLabel(path) {
+  if (path === '/' || path === '/index.html') return 'Home page';
+  if (path.indexOf('/contact') === 0) return 'Contact page';
+  return path;
+}
+
 function recipients() {
   var raw = process.env.QUOTE_NOTIFY_TO || FALLBACK_TO;
   var list = raw.split(',').map(function (address) {
@@ -138,7 +146,7 @@ module.exports = async function handler(req, res) {
     email: str(body.email),
     service: str(body.service) || 'Not specified',
     details: str(body.details),
-    source: str(body.source) || 'unknown'
+    source: pageLabel(str(body.source) || 'unknown')
   };
 
   var problem = validate(fields);
